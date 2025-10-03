@@ -4,18 +4,33 @@ import joblib
 from tensorflow.keras.models import load_model
 from keras.losses import MeanSquaredError
 from datetime import datetime
+import os
 
 # -----------------------------
 # Load Models & Scalers
 # -----------------------------
-lstm_model = load_model("models/lstm_model.h5", custom_objects={'mse': MeanSquaredError()})
-scaler_X = joblib.load("models/scaler_X.pkl")
-scaler_y = joblib.load("models/scaler_y.pkl")
-prima_model = joblib.load("models/prima_model.pkl")
-prima_scaler = joblib.load("models/prima_scaler.pkl")
+# Paths to models and scalers
+MODEL_DIR = "models"
+lstm_model_path = os.path.join(MODEL_DIR, "lstm_model.h5")
+scaler_X_path = os.path.join(MODEL_DIR, "scaler_X.pkl")
+scaler_y_path = os.path.join(MODEL_DIR, "scaler_y.pkl")
+prima_model_path = os.path.join(MODEL_DIR, "prima_model.pkl")
+prima_scaler_path = os.path.join(MODEL_DIR, "prima_scaler.pkl")
+
+# Check all files exist
+for file_path in [lstm_model_path, scaler_X_path, scaler_y_path, prima_model_path, prima_scaler_path]:
+    if not os.path.exists(file_path):
+        raise FileNotFoundError(f"Required file not found: {file_path}")
+
+# Load models and scalers
+lstm_model = load_model(lstm_model_path, custom_objects={'mse': MeanSquaredError()})
+scaler_X = joblib.load(scaler_X_path)
+scaler_y = joblib.load(scaler_y_path)
+prima_model = joblib.load(prima_model_path)
+prima_scaler = joblib.load(prima_scaler_path)
 
 # -----------------------------
-# Page Configuration
+# Streamlit Page Configuration
 # -----------------------------
 st.set_page_config(
     page_title="📈 Stock Price Predictor | PRIMA & LSTM",
@@ -31,12 +46,12 @@ st.markdown("""
 ### 👋 Welcome to our **Stock Price Prediction Tool**  
 
 Predict the **Closing Price** of a stock using either:  
-- **PRIMA Model (Linear Regression)**  
-- **LSTM Deep Learning Network**  
+- **PRIMA Model (Linear Regression)** – Fast traditional regression  
+- **LSTM Deep Learning Network** – Sequential pattern prediction  
 
 🔍 **Features:**  
 - Takes into account real stock market data (Open, High, Low, Volume)  
-- Interactive input for stock features  
+- Interactive sidebar for stock feature input  
 - Fast prediction with PRIMA or advanced sequential learning with LSTM  
 """)
 
@@ -44,6 +59,7 @@ Predict the **Closing Price** of a stock using either:
 # Sidebar Inputs
 # -----------------------------
 st.sidebar.header("📊 Input Stock Features")
+
 company_name = st.sidebar.text_input("🏢 Company Name", "Accor")
 date = st.sidebar.date_input("📅 Date", datetime.today())
 open_price = st.sidebar.number_input("💹 Open Price", min_value=0.0, step=0.01)
@@ -53,7 +69,7 @@ volume = st.sidebar.number_input("📊 Volume", min_value=0.0, step=1.0)
 model_choice = st.sidebar.selectbox("🧠 Select Model", ["PRIMA (Linear Regression)", "LSTM Deep Learning"])
 
 # -----------------------------
-# Prediction
+# Prediction Logic
 # -----------------------------
 if st.sidebar.button("🚀 Predict Closing Price"):
     with st.spinner("🤖 Calculating prediction..."):
@@ -77,7 +93,7 @@ if st.sidebar.button("🚀 Predict Closing Price"):
         st.balloons()
 
 # -----------------------------
-# Developer Info
+# Developer Info Footer
 # -----------------------------
 st.markdown("---")
 st.markdown("""
@@ -86,8 +102,8 @@ st.markdown("""
 - **Role:** AI/ML Engineer | Data Science Researcher  
 - **Specialization:** Machine Learning, LSTM, Predictive Modeling  
 - **Project:** 📊 DataSynthis_Job_task – Stock Price Forecasting  
-- 🌐 [GitHub Repository](https://github.com/yourusername/stock-price-predictor)  
+- 🌐 [GitHub Repository](https://github.com/imranbd23/stock-price-predictor.git)  
 - 📫 Contact: aburayhan2550@gmail.com
 """)
 
-st.caption("© 2025 PRIMA & LSTM Stock Predictor | Built with ❤️ using Streamlit & TensorFlow")
+st.caption("© 2025 PRIMA & LSTM Stock Predictor | Built with Python using Streamlit & TensorFlow")
