@@ -1,7 +1,8 @@
 # 📈 Stock Price Prediction Web App (PRIMA & LSTM)
 
 A machine learning web application that predicts the **Closing Price** of a stock based on historical features using either a **PRIMA (Linear Regression) Model** or a **Deep Learning LSTM Model**. Built with **Streamlit**, **TensorFlow**, **scikit-learn**, and **joblib**.
-
+💡 Check it out here: https://lnkd.in/g3NJpqvA
+📝 Blog Post: https://surl.li/eqyykf
 ---
 
 ## 🚀 Features
